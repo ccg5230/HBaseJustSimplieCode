@@ -12,6 +12,6 @@ HBase2.2.4 + Hadoop2.8.5 +zookeeper3.6.0
 HBase安装集群配置资料请查看：
 
 
-[HBase学习教程](http://c.biancheng.net/view/6522.html)
-[Hadoo2.8.5集群安装](https://blog.csdn.net/ccgrjxx597/article/details/105642514)
-[hbase总结~hbase配置和使用](https://www.cnblogs.com/JamesXiao/p/6202372.html)
+[HBase学习教程](http://c.biancheng.net/view/6522.html) <br>
+[Hadoo2.8.5集群安装](https://blog.csdn.net/ccgrjxx597/article/details/105642514) <br>
+[hbase总结~hbase配置和使用](https://www.cnblogs.com/JamesXiao/p/6202372.html) <br>
