@@ -274,6 +274,7 @@ public class HBaseService {
             columnPropertiesMap.put("value", new String(CellUtil.cloneValue(cell)));//列的值
             columnPropertiesMap.put("time", DateUtils.convert2String(new Date(cell.getTimestamp()),
                 DateUtils.YYYY_MM_DD_HH_MM_DD_SSS));//时间戳
+			map.put(qualifier,columnPropertiesMap);
         }
 
         table.close();
