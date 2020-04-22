@@ -252,36 +252,6 @@ public class HBaseService {
     }
 
     /**
-     * 使用 get 方法获取某一行数据
-     * @param tableName
-    * @param rowKey 表名
-     * @return {@link Map<String,Map<String,String>> }
-     * @throws
-     */
-    public Map<String,Map<String,String>>  getData(String tableName, String rowKey) throws IOException{
-        Table table = getTable(tableName);
-        Get get = new Get(Bytes.toBytes(rowKey));
-        Result result= table.get(get);
-        //<qualifier,对应的列属性>
-        Map<String,Map<String,String>> map = new HashMap<>();
-        for (Cell cell:result.rawCells()){
-            String qualifier = new String(CellUtil.cloneQualifier(cell));
-            //每一行数据
-            Map<String,String> columnPropertiesMap = new HashMap<>();
-            columnPropertiesMap.put("rowkey", CellUtil.getCellKeyAsString(cell));//RowKey
-            columnPropertiesMap.put("family", new String(CellUtil.cloneFamily(cell)));//列族
-            columnPropertiesMap.put("name", qualifier);//列限定符
-            columnPropertiesMap.put("value", new String(CellUtil.cloneValue(cell)));//列的值
-            columnPropertiesMap.put("time", DateUtils.convert2String(new Date(cell.getTimestamp()),
-                DateUtils.YYYY_MM_DD_HH_MM_DD_SSS));//时间戳
-			map.put(qualifier,columnPropertiesMap);
-        }
-
-        table.close();
-        return map;
-    }
-
-    /**
      * 通过行前缀过滤器查询数据
      * @author zifangsky
      * @date 2018/7/4 18:21
@@ -429,7 +399,7 @@ public class HBaseService {
     }
 
     /**
-     * 根据tableName和rowKey精确查询一行的数据
+     * 根据tableName和rowKey精确查询一行的数据:
      * @author zifangsky
      * @date 2018/7/3 16:07
      * @since 1.0.0
@@ -438,7 +408,7 @@ public class HBaseService {
      * @return java.util.Map<java.lang.String,java.lang.String> 返回一行的数据
      */
     public Map<String,String> getRowData(String tableName, String rowKey){
-        //返回的键值对
+        //返回的键值对: qualifier-value
         Map<String,String> result = new HashMap<>();
 
         Get get = new Get(Bytes.toBytes(rowKey));
@@ -465,6 +435,36 @@ public class HBaseService {
         }
 
         return result;
+    }
+	
+	/**
+     * 使用 get 方法获取某一行数据:包含列蔟和时间戳
+     * @param tableName
+    * @param rowKey 表名
+     * @return {@link Map<String,Map<String,String>> }
+     * @throws
+     */
+    public Map<String,Map<String,String>>  getRowDataAndCellProperties(String tableName, String rowKey) throws IOException{
+        Table table = getTable(tableName);
+        Get get = new Get(Bytes.toBytes(rowKey));
+        Result result= table.get(get);
+        //<qualifier,对应的列属性>
+        Map<String,Map<String,String>> map = new HashMap<>();
+        for (Cell cell:result.rawCells()){
+            String qualifier = new String(CellUtil.cloneQualifier(cell));
+            //每一行数据
+            Map<String,String> columnPropertiesMap = new HashMap<>();
+            columnPropertiesMap.put("rowkey", CellUtil.getCellKeyAsString(cell));//RowKey
+            columnPropertiesMap.put("family", new String(CellUtil.cloneFamily(cell)));//列族
+            columnPropertiesMap.put("name", qualifier);//列限定符
+            columnPropertiesMap.put("value", new String(CellUtil.cloneValue(cell)));//列的值
+            columnPropertiesMap.put("time", DateUtils.convert2String(new Date(cell.getTimestamp()),
+                DateUtils.YYYY_MM_DD_HH_MM_DD_SSS));//时间戳
+			map.put(qualifier, columnPropertiesMap);
+        }
+
+        table.close();
+        return map;
     }
 
     /**
